@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:14-alpine
+    container_name: booking-engine-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: booking-engine
+      POSTGRES_USER: booking-user
+      POSTGRES_PASSWORD: booking-password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
