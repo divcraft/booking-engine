@@ -1,12 +1,13 @@
-import { Injectable, ServiceUnavailableException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { DatabaseService } from '#core/database';
-import { HealthLiveResType, HealthReadyResType } from './health.schema';
+import { HealthLiveOutputDto, HealthReadyOutputDto } from './health.models';
+import { ERRORS } from '#core/errors';
 
 @Injectable()
 export class HealthService {
   constructor(private readonly db: DatabaseService) {}
 
-  live(): HealthLiveResType {
+  live(): HealthLiveOutputDto {
     return {
       status: 'ok',
       service: 'booking-engine',
@@ -14,23 +15,16 @@ export class HealthService {
     };
   }
 
-  async ready(): Promise<HealthReadyResType> {
+  async ready(): Promise<HealthReadyOutputDto> {
     try {
       await this.db.$queryRaw`SELECT 1`;
       return {
         status: 'ok',
-        dependencies: {
-          database: 'ok',
-        },
         timestamp: new Date().toISOString(),
       };
     } catch {
-      throw new ServiceUnavailableException({
-        status: 'error',
-        dependencies: {
-          database: 'error',
-        },
-        timestamp: new Date().toISOString(),
+      throw new ERRORS.APPLICATION_NOT_READY.exception({
+        database: 'error',
       });
     }
   }

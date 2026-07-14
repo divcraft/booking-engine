@@ -1,5 +1,5 @@
 import { ZodError } from 'zod';
-import { configSchema, ConfigType, LogLevelType } from './config.schema';
+import { configSchema, ConfigType, LogLevelType } from './config.models';
 
 export const config = (): ConfigType => {
   const rawConfig: ConfigType = {
