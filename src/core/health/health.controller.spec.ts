@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HealthController } from './health.controller';
 import { HealthService } from './health.service';
-import { HealthLiveResType, HealthReadyResType } from './health.schema';
+import { HealthLiveOutputDto, HealthReadyOutputDto } from './health.models';
 
 jest.mock('./health.service', () => ({
   HealthService: class HealthService {},
@@ -43,7 +43,7 @@ describe('HealthController', () => {
 
   describe('getLive', () => {
     it('should return live health status', () => {
-      const response: HealthLiveResType = {
+      const response: HealthLiveOutputDto = {
         status: 'ok',
         service: 'booking-engine',
         timestamp: '2026-06-27T10:00:00.000Z',
@@ -58,11 +58,8 @@ describe('HealthController', () => {
 
   describe('getReady', () => {
     it('should return ready health status', async () => {
-      const response: HealthReadyResType = {
+      const response: HealthReadyOutputDto = {
         status: 'ok',
-        dependencies: {
-          database: 'ok',
-        },
         timestamp: '2026-06-27T10:00:00.000Z',
       };
 
